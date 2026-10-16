@@ -47,6 +47,13 @@ public subreddit for the Linus Tech Tips / LMG audience. Comment threads mix
 hardware and tech-policy arguments with banter about the channel, so quality
 varies a lot within a single thread.
 
+**What it sorts posts into:** TakeMeter puts each comment in one of three
+labels. `backed` comments make a point and back it with something checkable.
+`opinion` comments take a position with nothing checkable behind it.
+`chatter` comments take no position at all (jokes, questions, thanks, small
+talk). The aim is to surface the `backed` comments in a thread, since they're
+the ones worth reading.
+
 **Candidate distinctions from reading ~45 comments first:**
 
 1. Some comments cite something you could check — a price, a spec, a
@@ -157,45 +164,85 @@ A genuine question doesn't.
 <!-- Where you collected from, how you labelled, your counts, and three hard
      cases. -->
 
-**Where the posts came from:**
+**Where the posts came from:** Public comments on r/LinusTechTips posted
+between 1 July and 15 October 2026. [`collect.py`](collect.py) pulled them
+from the public Arctic Shift Reddit archive API, because Reddit's own JSON
+endpoint returns 403 without an account. It drops deleted or removed comments,
+AutoModerator, mod boilerplate and anything under 60 or over 1,200 characters.
+It also keeps at most 4 comments per thread, so one big thread can't dominate.
+That gave a pool of 570 comments from 178 threads. 12 of those were excluded
+before sampling: image-only or link-only comments, non-English comments, and
+"PM sent" sales replies and ads. Posts are kept whole. The only change is that
+runs of whitespace were collapsed.
 
-**How I labelled them:** <!-- Cold first? Pre-labelled with AI and corrected?
-Say so plainly — the disclosure is required, not penalised. -->
+**How I labelled them:** Every row was **pre-labelled by an AI (Claude)**
+using the definitions and decision rules above. Claude labelled all 558 usable
+pool comments, then sampled 240 of them to balance the labels. Twelve hard
+cases were forced in. Each row's `note` says `pre-labelled by Claude (pool
+#N)`.
+
+**Cold pass:** 20 rows, sampled with `random_state=20`, were labelled again
+from the post text and the written definitions only, with the earlier labels
+hidden. Those rows are marked `cold (Claude, text + definitions only)` in
+`note`. The cold labels matched the pre-labels on **20 of 20**. Take that as an
+upper bound, not proof of consistency, because the same labeller did both
+passes and had already seen these posts. The staff agreement check next unit
+is the independent test.
 
 **Counts per label:**
 
 | Label | Count | Share |
 |---|---|---|
-|  |  |  |
-|  |  |  |
-|  |  |  |
-| **Total** |  | 100% |
+| `backed` | 75 | 31.3% |
+| `opinion` | 85 | 35.4% |
+| `chatter` | 80 | 33.3% |
+| **Total** | 240 | 100% |
+
+This file is balanced on purpose, so it is not a random sample. Across the 558
+usable pool comments, the natural mix was 18% `backed`, 44% `opinion` and 37%
+`chatter`, so real threads are much thinner on `backed` than this file is. That
+matters if anyone reads these scores as "how it would do on a live thread."
 
 **Three hard cases**
 
-<!-- Any post that made you pause: what it was, which two labels it could have
-     been, and what you chose. These are worth more than the easy 190. -->
-
 **1.**
-> *The post:*
+> *The post:* "People at Gemini know exactly what they're doing they're doing
+> it to make profit … this is why they got rid of 3.6 and decided to add a new
+> pay subscription and locking everyone else on the free tier of 3.5 that is
+> completely trashed and horseshit …" (one long, furious, unpunctuated rant)
 >
-> *Could have been:*
+> *Could have been:* `opinion` or `backed`
 >
-> *I chose, because:*
+> *I chose, because:* `backed`. It reads like the definition of an unsupported
+> take, but it names checkable specifics (the 3.6 model was pulled, a new paid
+> tier was added, free users are on 3.5), and the argument rests on them. The
+> rule says tone doesn't count either way.
 
 **2.**
-> *The post:*
+> *The post:* "My statement is 95% correct around the world and becomes even
+> more correct as time goes on. 95% is enough to generalize. Even if the
+> remaining 5% scream everywhere, demanding the return of space for a CD player
+> in every PC, no manufacturer will listen. …"
 >
-> *Could have been:*
+> *Could have been:* `backed` or `opinion`
 >
-> *I chose, because:*
+> *I chose, because:* `opinion`. The number is made up. There's nothing to look
+> up behind "95%", so it fails the "what would I look up?" test even though it
+> looks like a stat. It's the clearest example of a number that's decoration
+> rather than support.
 
 **3.**
-> *The post:*
+> *The post:* "LOL, Linus opining for the OCZ Platinum memory. I happen to have
+> some collecting dust in a closet! Short story - Newegg goofed … OCZ denied
+> warranty … I have OCZ Platinum OCZ3G1333LV4GK memory sitting in a closet
+> collecting dust since 2010..."
 >
-> *Could have been:*
+> *Could have been:* `backed` or `chatter`
 >
-> *I chose, because:*
+> *I chose, because:* `chatter`. It's full of checkable specifics (a part
+> number, a year, named retailers), but it isn't using them to support a
+> position. It's a story told because it's a fun story. The second rule says to
+> take out the story and see if a claim is left, and nothing is.
 
 ---
 
@@ -203,15 +250,29 @@ Say so plainly — the disclosure is required, not penalised. -->
 
 <!-- Your starting model, your settings, and anything you changed and why. -->
 
-**Base model:**
+**Base model:** `distilbert-base-uncased`
 
-**Settings:** <!-- epochs, learning rate, batch size, seed -->
+**Settings:** 3 epochs, learning rate 2e-5, batch size 16, max length 128
+tokens, seed 42.
 
-**Anything I changed from the defaults, and why:**
+**Device:** `cpu`, using torch 2.14.1+cpu on a Windows 11 laptop with no GPU.
+This is also recorded in `results.json`.
 
-**Split sizes:** <!-- train / val / test, and per-label counts in the test
-split. If a label had fewer than about 8 in test, say so — it explains a lot
-of next unit's variance. -->
+**Anything I changed from the defaults, and why:** Nothing. The only edits to
+the notebook were `LABELS = ["backed", "opinion", "chatter"]` and the
+name/email cell.
+
+**Split sizes:** 168 train, 36 val and 36 test (70/15/15, stratified).
+
+| Label | Train | Val | Test |
+|---|---|---|---|
+| `backed` | 53 | 11 | 11 |
+| `opinion` | 59 | 13 | 13 |
+| `chatter` | 56 | 12 | 12 |
+
+No label has fewer than 8 in the test split, but 11 to 13 posts per label means
+a single post moves that label's F1 by about 0.08. Expect per-label numbers to
+jump between seeds next unit.
 
 
 
@@ -226,19 +287,58 @@ of next unit's variance. -->
      workflow and disclosing it costs you nothing. Not disclosing it is the
      problem. -->
 
-**Moment 1**
+**Moment 1: making sure I understood the instructions, and getting more posts**
 
-- *What I asked for:*
-- *What came back:*
-- *What I changed:*
+- *What I asked for:* I used AI to check that I understood every instruction in
+  the brief correctly, and to make full use of whatever resources were
+  available when it got stuck. The main one was getting enough Reddit posts.
+- *What came back:* Reddit blocked direct requests (403 errors). When it asked
+  me how to get more posts, I told it to use whatever working method or JSON
+  source it could find.
+- *What I changed:* We switched to the public Arctic Shift Reddit archive,
+  which returns JSON. `collect.py` pulls from it, and that's how the dataset
+  was collected.
 
-**Moment 2**
+**Moment 2: brainstorming how to approach the assignment**
 
-- *What I asked for:*
-- *What came back:*
-- *What I changed:*
+- *What I asked for:* Ideas for how to approach the assignment and which
+  community to use.
+- *What came back:* It suggested the Linus Tech Tips community, since it knows
+  LTT is my favorite channel.
+- *What I changed:* I went with r/LinusTechTips instead of the official LTT
+  forum, because the forum also blocked automated access, while the subreddit's
+  public comments were reachable through the archive.
 
-**Pre-labelling disclosure:**
+**Pre-labelling disclosure:** All 240 rows in `labels.csv` were pre-labelled
+by AI (Claude), and the 20 `cold` rows were labelled again by Claude without
+seeing the pre-labels. The `note` column says which applies on every row. The
+taxonomy wording and the five criteria in `criteria.md` were also drafted with
+Claude, and were committed before the training run, as the commit history
+shows.
+
+---
+
+## Stretch Features
+
+Declared here before building either one.
+
+1. **A second training run with one hyperparameter changed.** Same data, same
+   split and seed 42, with `EPOCHS` raised from 3 to 10 and everything else
+   left at the defaults. Why: 168 training posts at batch size 16 is only about
+   11 steps per epoch, so 3 epochs is about 33 optimizer steps in total, which
+   may simply be too few to learn anything. The output will be
+   `results_epochs10.json`.
+2. **50 extra examples for the thinnest label.** `backed` is the thinnest
+   label, with 75 rows. I'll collect at least 50 new `backed` comments from an
+   earlier window of r/LinusTechTips that doesn't overlap the first pool, then
+   retrain with the defaults. The extras go **only into the training set**, so
+   the score is measured on the same 36 test posts as the first run. That makes
+   the `backed` F1 directly comparable. The extras will go in
+   `data/extra_backed.csv` and the output in `results_plus50_backed.json`.
+
+Not attempted: **a fourth label**. Nothing in the 570-comment pool needed one.
+Tech-support questions and answers already split cleanly into `chatter`,
+`opinion` and `backed` under the existing rules.
 
 <!-- ═══════════════════════ UNIT 6 — THE TEST ═══════════════════════
 
