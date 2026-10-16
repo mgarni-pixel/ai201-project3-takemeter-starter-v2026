@@ -446,12 +446,19 @@ numbers below come from the committed JSON files.
 <!-- Both models on the same posts. `python baseline.py --trained results.json`
      prints this table for you. -->
 
+Output of `python baseline.py --trained results.json`. Both columns are scored
+on the same 36 held-out posts in `test_split.csv`. The baseline is
+`facebook/bart-large-mnli`, zero-shot, prompted with the definitions in
+`label_definitions.txt`, on `cpu`. "Trained" is the unit 5 run in
+`results.json` (seed 42, 3 epochs).
+
 | Measure | Baseline | Trained | Difference |
 |---|---|---|---|
-| Overall accuracy |  |  |  |
-| Macro F1 |  |  |  |
-| F1 — `label_one` |  |  |  |
-| F1 — `label_two` |  |  |  |
+| Overall accuracy | 0.361 | 0.361 | +0.000 |
+| Macro F1 | 0.249 | 0.298 | +0.049 |
+| F1 — `backed` | 0.512 | 0.444 | -0.067 |
+| F1 — `chatter` | 0.000 | 0.000 | +0.000 |
+| F1 — `opinion` | 0.235 | 0.450 | +0.215 |
 
 **What I predicted before I looked:**
 <!-- Milestone 1 asks you to write this BEFORE seeing the trained numbers. A
@@ -468,6 +475,22 @@ over reading the definitions.
 **What the gap actually means:**
 <!-- If the baseline matched your trained model, your fine-tuning added
      nothing — and that is a real finding, not a failure. Say it plainly. -->
+**The unit 5 fine-tune added nothing over the baseline in accuracy. Both got
+13 of 36 right.** The prediction was right on two of its three calls. The
+baseline matched the trained model rather than beating it, did best on
+`backed` (0.512) and scored 0.000 on `chatter`.
+
+The two models fail in different directions. In `baseline_results.json` the
+zero-shot model calls **32 of 36 posts `backed`**. It reads almost any concrete
+noun as "a specific detail" and never predicts `chatter`. The trained model
+calls 27 of 36 posts `opinion`. Each one collapses onto a single label, and
+they just picked different ones. The only real edge the fine-tune has is
+`opinion` F1 (+0.215), and that comes from predicting `opinion` nearly every
+time.
+
+So 3 epochs of fine-tuning on 168 posts is not enough to beat reading the
+definitions. The three-seed runs below check whether that holds beyond seed
+42.
 
 
 

@@ -1,0 +1,214 @@
+{
+  "model": "facebook/bart-large-mnli",
+  "n": 36,
+  "seed": 42,
+  "held_out": true,
+  "used_definitions": true,
+  "scores": {
+    "n": 36,
+    "accuracy": 0.3611111111111111,
+    "f1_macro": 0.24897400820793436,
+    "per_label": {
+      "backed": {
+        "precision": 0.34375,
+        "recall": 1.0,
+        "f1": 0.5116279069767442,
+        "support": 11
+      },
+      "chatter": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "support": 12
+      },
+      "opinion": {
+        "precision": 0.5,
+        "recall": 0.15384615384615385,
+        "f1": 0.23529411764705882,
+        "support": 13
+      }
+    }
+  },
+  "predictions": [
+    {
+      "text": "Yeah I don\u2019t know why Jake made such a drama there, 2 or 3 seconds is fair use, surely?",
+      "gold": "opinion",
+      "predicted": "backed"
+    },
+    {
+      "text": "\"Not running x86 software\" is a nicer way of saying \"couldn't really do anything.\" I honestly think that the market was ready for a device like the Surface RT, but it was incapable of doing anything at launch, and it was not well-supported moving forward. Microsoft needed one of 3 things: * a translation layer with strong compatibility and performant emulation of x86 code * developers to port their apps to Windows RT * developers to create bespoke apps for Windows RT/tablet's and none of them really ever happened. It didn't help that the Surface RT (hence Windows RT) looked like the little brother variant of the Surface Pro. It would take Windows on ARM chip makers another decade before they were even feasible for a flagship PC.",
+      "gold": "backed",
+      "predicted": "backed"
+    },
+    {
+      "text": "Would you consider selling any? I'm in the UK as well, but could never bring myself to pay for the shipping.",
+      "gold": "chatter",
+      "predicted": "backed"
+    },
+    {
+      "text": "I am laughing and crying at the same time; bruh i am happy for yea but . . . my God. https://preview.redd.it/rswsljapjzuh1.png?width=1054&format=png&auto=webp&s=cf4fe95d9b775efdef33563a5144c0d25d4d77f0",
+      "gold": "chatter",
+      "predicted": "backed"
+    },
+    {
+      "text": "It\u2019s a great TV. I have one in my living room (not sure if it\u2019s an F, but S95 from last year). But, my primary use is on my desk, I have 2 55\u201d TVs as my monitors, and I\u2019m not very comfortable with using OLEDs there. They can be on for basically the entire day with a lot of static images. RGB mini LED works better as I don\u2019t have to worry about burn in, and TBH I like the image more than S95. It\u2019s brighter with more intense colors (but without over saturation like Samsung tends to do). It\u2019s still an LED backlight, so black won\u2019t be as perfect as on OLED, but much better than QN95-whatever that I had before (that one was had an IPS panel, so off-axis glow was pretty bad), and it\u2019s not noticeable unless it\u2019s like a small text in black background. The only problem is size, 65\u201d is too big (very immersive for games/movies/calls, but not great for work), but that\u2019s just for my scenario. Hopefully they\u2019ll shrink the tech for next generation.",
+      "gold": "backed",
+      "predicted": "backed"
+    },
+    {
+      "text": "Quality of OLEDs are indeed good, but they aren't reliable. Vincent from hdtvtest confirmed that color bleeding isn't noticable under real world use.",
+      "gold": "backed",
+      "predicted": "backed"
+    },
+    {
+      "text": "I'm pretty sure I heard the little Lord mention he got to ASML here in the Netherlands",
+      "gold": "opinion",
+      "predicted": "backed"
+    },
+    {
+      "text": "Funny that OP didn't post it to \"the other LTT related subreddit\" (their post history does have activity there) but chose to post their whinge post here instead.",
+      "gold": "opinion",
+      "predicted": "opinion"
+    },
+    {
+      "text": "I had a label printed on the 28th with USPS for an order I placed on the 25th. They just updated the label this morning to show it was scanned in at the Atlanta distribution center with an estimated delivery date of Tuesday. This is the longest I've had to wait for an LTT order to start moving, ever.",
+      "gold": "backed",
+      "predicted": "backed"
+    },
+    {
+      "text": "I use an active fiber optic DisplayPort Cable. It\u2019s completely fixed my random black screen problem I was having with my 4k OLED in HDR @240hz. I tried SO many traditional DisplayPort cables from reputable manufacturers and I just could not find one that could sustain the throughput without dropping out. I already have a couple of nice extremely long active fiber cables and they\u2019ve always fascinated me. I have a 100ft usb a to a, a 33ft c to c and a 33 ft a to c and a 33ft hdmi. They\u2019re just so neat.",
+      "gold": "backed",
+      "predicted": "backed"
+    },
+    {
+      "text": "please elaborate if you want \u2014 i always thought of cotton as the ideal material for common uses with the big disadvantage being moisture retention",
+      "gold": "chatter",
+      "predicted": "backed"
+    },
+    {
+      "text": "I totally feel you. Gemini is absolutely disaster, it cannot even do the simplest things, that annoys me so much.",
+      "gold": "opinion",
+      "predicted": "backed"
+    },
+    {
+      "text": "You can't change the CPU multiplier. That's a z series (z68 / z77) feature on Intel",
+      "gold": "backed",
+      "predicted": "backed"
+    },
+    {
+      "text": "people are weirdly scared of this breaking, as if it isn't just the boot order that gets changed. Nothing is happening to the os'",
+      "gold": "opinion",
+      "predicted": "backed"
+    },
+    {
+      "text": "Pretty sure it's been mentioned on Wan on doing a flight setup comparison. Or at least wanting to.",
+      "gold": "backed",
+      "predicted": "backed"
+    },
+    {
+      "text": "Why fiddle with ocr when you can grab the text from the page source?",
+      "gold": "opinion",
+      "predicted": "backed"
+    },
+    {
+      "text": "Hi. Kinda old post but saw your comment while looking how to salvage a really nice deskpad and wanted to share my advice. I'm a woman but a sweaty one too, who experienced a lot of problems due to that (not the staining, others) but not anymore. I'd recommend looking into hyperhidrosis and a dermatologist in case you think you might have it. Meds to regulate sweatiness are life changing.",
+      "gold": "opinion",
+      "predicted": "backed"
+    },
+    {
+      "text": "I thiiink Windows Update is supposed to handle the transition to the 2023 Secure Boot keys on its own? There's a Microsoft article with manual steps [here](https://techcommunity.microsoft.com/blog/windows-itpro-blog/updating-microsoft-secure-boot-keys/4055324) though, and it also has instructions at the very end for checking which keys you currently have. Might be worth a look, OP",
+      "gold": "backed",
+      "predicted": "backed"
+    },
+    {
+      "text": "I don't think it's necessarily strange for people to not like this approach to data management and as I mentioned in my post, there is a way for you to have your cake and eat it too with other software. It's a personal preference to want your data structure and the indexing of it to be separate. And there are ways to watch files and update the database as they are modified. It's not a \"complaint\" as much as just dissatisfaction with the way it currently works and for those that feel that way, they look to find other tools to do the job the way they want it to. Furthermore, by providing feedback to the Immich team, they quickly rolled out storage templates as the default, which is a net positive change I believe, so highlighting this stuff does have a purpose beyond just yelling into the internet void. Letting developers know what's important to you can help shape the project.",
+      "gold": "backed",
+      "predicted": "backed"
+    },
+    {
+      "text": "i see your point. i agree up to a point. there's a big possibility that the cost of the video outweighs the income it brings. although in this case, it doesn't mean that there's really no reason to go this direction, or even a possibility of such videos turning profit. the gold xbox controller doesn't perform financially because it's a dead end. no further sales can be made, because they aren't exactly written for a further sales. with custom form PCs though, a LOT can be explored to eventually be a product. they could sell the STLs, design/cut plans (woodworking, 3d printing, cnc market, they do this all the time), they could sell custom length cable for that particular design, and the last is the big one: Linus is an investor of Framework! the one brand whose lines of products are practically begging for all custom setup for each use cases. whether it's NAS, HTPC, home server, anything, there should be thousands of custom builds for any of that, all with different approach to things. that's just on top of my head, a single viewer. imagine what the LTT team can do if they can see the potential in this.",
+      "gold": "backed",
+      "predicted": "backed"
+    },
+    {
+      "text": "Maybe I'm an outlier, but I haven't bought socks in like 15+ years and I don't think I've gotten holes in more than two or three pairs. Granted, I work from home, so I probably wear socks once every two or three days, but still. If I assume a pair of socks gets worn every 3 days, that's the same number of wears as daily for 5 years. Do my feet just not wear out socks as fast?",
+      "gold": "chatter",
+      "predicted": "backed"
+    },
+    {
+      "text": "They need to open their mouths if they want me to click that",
+      "gold": "chatter",
+      "predicted": "opinion"
+    },
+    {
+      "text": "I'm sure more recent numbers are affected by that somewhat, but ltt views were recovering before that came into effect. I also don't think that's suddenly tripling view counts, especially when I'm not noticing it anywhere else at that magnitude. But, sure.",
+      "gold": "opinion",
+      "predicted": "backed"
+    },
+    {
+      "text": "You better stop the libel right now. This is more like 360p Riley.",
+      "gold": "chatter",
+      "predicted": "opinion"
+    },
+    {
+      "text": "They should of started with Onenote, the rest of the apps all have alternatives that work 99% fine.. Joplin / Trillium / Obsidian etc are not Onenote.",
+      "gold": "opinion",
+      "predicted": "backed"
+    },
+    {
+      "text": "so did yt notice fewer people are watching videos so they inflate the view count to trick the advertisers?",
+      "gold": "chatter",
+      "predicted": "backed"
+    },
+    {
+      "text": "I am pretty critical of the Linus hate train at times, but \u201cyou participate here yet criticize him\u201d is probably the most annoying Internet culture argument ever. Yes they\u2019re here. They\u2019ve seen the content before. They don\u2019t like the direction it\u2019s heading. That\u2019s fine?",
+      "gold": "opinion",
+      "predicted": "backed"
+    },
+    {
+      "text": "Never have and never will. I don't want to talk to a computer. I refuse to use any automated call systems either. I'll wait in silence until you let me press a button or talk to a human please and thank you.",
+      "gold": "chatter",
+      "predicted": "backed"
+    },
+    {
+      "text": "It\u2019s almost like tech nerds and odd people with unusual habits has a big overlap haha.",
+      "gold": "chatter",
+      "predicted": "backed"
+    },
+    {
+      "text": "Wonder if your RTC battery is borked https://www.youtube.com/watch?v=4GSGOF4hFs0&t=1289s",
+      "gold": "backed",
+      "predicted": "backed"
+    },
+    {
+      "text": "Before beeing so confident try at least find 5 new 2026 pc cases with cd player slot. And ab life, it's not me who can't stand my correct statment ) You made a chose to act as a Karen to correct me without any fact checing. And no - 2 new pc case design will not made you right, when there thousends cases with glass or fans instead cd player slot. Outliers no one count.",
+      "gold": "opinion",
+      "predicted": "opinion"
+    },
+    {
+      "text": "those little crab bots look like they're about to form a tiny uprising on that patio, the yellow dozer is hopelessly outmatched",
+      "gold": "chatter",
+      "predicted": "backed"
+    },
+    {
+      "text": "https://preview.redd.it/fmc8xsg8bavh1.png?width=914&format=png&auto=webp&s=f4af2a40e7cdced46f5cd6569aa037c4af91a28e \\+ he's very salty because of the subscription thing. Justified. Dangerous combination.",
+      "gold": "opinion",
+      "predicted": "backed"
+    },
+    {
+      "text": "I knew someone who did that over 10 years ago. They had commissioned a painting of her dead mother holding her new born child. The painting ended up just looking like both were dead...",
+      "gold": "chatter",
+      "predicted": "backed"
+    },
+    {
+      "text": "I don't even use Gemini for that stuff. I just use Genini for its intended purpose of being a chatbot. Admittedly, all of them are owned by scummy companies, but hey. I've long since accepted that evil is better than good in this world.",
+      "gold": "chatter",
+      "predicted": "backed"
+    },
+    {
+      "text": "Funny how they answer to a meme video but when GN's Steve (and the whole team ofc) make a legit video pointing maaaaany unacceptable errors, about ethics, accuracy and responsibility, Linus just makes a unfathomable rant answer spiced up with gas lightning and random whataboutism's. Guess the jet is much nicer than having proper integrity.",
+      "gold": "opinion",
+      "predicted": "backed"
+    }
+  ]
+}
