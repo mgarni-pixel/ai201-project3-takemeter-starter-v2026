@@ -1,6 +1,7 @@
 """Pull public r/LinusTechTips comments from the Arctic Shift Reddit archive.
 
-    python collect.py pool.csv
+    python collect.py pool.csv                          # 2026-07-01 .. 2026-10-15, the main pool
+    python collect.py pool2.csv 2026-03-01 2026-07-01   # an earlier window, for the stretch extras
 
 Writes a candidate pool (text, permalink) to label from. Not labels.csv itself.
 """
@@ -18,8 +19,8 @@ PAGES = 60          # 100 comments per page
 PER_THREAD = 4      # cap so one hot thread can't dominate the pool
 
 
-def fetch(before):
-    url = f"{API}?subreddit=LinusTechTips&limit=100&after={AFTER}&before={before}&sort=desc"
+def fetch(before, after):
+    url = f"{API}?subreddit=LinusTechTips&limit=100&after={after}&before={before}&sort=desc"
     req = urllib.request.Request(url, headers={"User-Agent": "ai201-takemeter-coursework/1.0"})
     for attempt in range(4):    # the archive throws the odd 422/5xx under load
         try:
@@ -42,10 +43,10 @@ def keep(c):
     )
 
 
-def main(out):
-    rows, seen, per_thread, before = [], set(), Counter(), BEFORE
+def main(out, after=AFTER, before=BEFORE):
+    rows, seen, per_thread = [], set(), Counter()
     for _ in range(PAGES):
-        page = fetch(before)
+        page = fetch(before, after)
         if not page:
             break
         for c in page:
@@ -64,4 +65,4 @@ def main(out):
 
 
 if __name__ == "__main__":
-    main(sys.argv[1])
+    main(*sys.argv[1:4])
