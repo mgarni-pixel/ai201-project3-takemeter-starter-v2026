@@ -42,6 +42,22 @@
 <!-- Your community, and what your classifier sorts posts into. Three or four
      sentences. -->
 
+**Community:** [r/LinusTechTips](https://www.reddit.com/r/LinusTechTips/), the
+public subreddit for the Linus Tech Tips / LMG audience. Comment threads mix
+hardware and tech-policy arguments with banter about the channel, so quality
+varies a lot within a single thread.
+
+**Candidate distinctions from reading ~45 comments first:**
+
+1. Some comments cite something you could check — a price, a spec, a
+   regulation, a link, a quote from the WAN Show. Most don't.
+2. Many comments state a judgment ("YouTube isn't perfect", "skies are public")
+   with no support beyond the poster's say-so.
+3. A big share isn't arguing anything: jokes, questions, "thanks for the help",
+   personal stories told for fun.
+4. First-hand anecdotes ("I had one installer that refused to…") sit awkwardly
+   between the first two — experience, but not checkable by anyone else.
+
 
 
 ---
