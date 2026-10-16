@@ -501,31 +501,59 @@ definitions. The three-seed runs below check whether that holds beyond seed
 <!-- Five criteria across three seeds. The notebook's section 6 prints the
      spread table; the Target and Verdict columns are yours. -->
 
+Notebook section 6, `RUN_LABEL = "before"`, the unit 5 defaults (3 epochs,
+lr 2e-5, batch 16), on **`cpu`** (torch 2.14.1+cpu). The source file is
+`results_three_seeds_before.json`. Seed 42 reproduced the unit 5 run exactly
+(0.361).
+
 | Criterion | Target | Seed 42 | Seed 7 | Seed 2024 | Verdict |
 |---|---|---|---|---|---|
-| 1.  |  |  |  |  |  |
-| 2.  |  |  |  |  |  |
-| 3.  |  |  |  |  |  |
-| 4.  |  |  |  |  |  |
-| 5.  |  |  |  |  |  |
+| 1. Overall accuracy | ≥ 0.60 every seed | 0.361 | 0.500 | 0.500 | MISSED |
+| 2. F1 `backed` | ≥ 0.55 every seed | 0.444 | 0.167 | 0.636 | MISSED |
+| 3. Lowest label F1 | ≥ 0.45 every seed | 0.000 (`chatter`) | 0.167 (`backed`) | 0.333 (`opinion`) | MISSED |
+| 4. Agreement with staff set | ≥ 21/30 | — | — | — | PENDING (needs `staff_labels.csv` from TF) |
+| 5. Confidence gap (most-sure third − least-sure third) | ≥ 0.15 every seed | 0.167 (0.417 − 0.250) | 0.417 (0.667 − 0.250) | 0.417 (0.750 − 0.333) | MET |
+
+The spread table from section 6, pasted as printed:
+
+| Measure | Seed 42 | Seed 7 | Seed 2024 | Spread |
+|---|---|---|---|---|
+| Overall accuracy | 0.361 | 0.500 | 0.500 | 0.139 |
+| Macro F1 | 0.298 | 0.419 | 0.503 | 0.205 |
+| F1 — `backed` | 0.444 | 0.167 | 0.636 | 0.470 |
+| F1 — `opinion` | 0.450 | 0.591 | 0.333 | 0.258 |
+| F1 — `chatter` | 0.000 | 0.500 | 0.538 | 0.538 |
+
+> Accuracy moved 0.139 across seeds — more than 10 points. Your dataset is too
+> small or too lopsided for a stable measure. That IS a diagnosis. Write it down.
 
 ### Confusion matrix
 
 <!-- ⚠️ TYPED AS A MARKDOWN TABLE. The notebook prints one ready to paste.
      An image of a matrix earns nothing. -->
 
-| true \ predicted |  |  |  |
+Seed 42, from section 7 (device `cpu`):
+
+| true \ predicted | backed | opinion | chatter |
 |---|---|---|---|
-| **** |  |  |  |
-| **** |  |  |  |
-| **** |  |  |  |
+| **backed** | 4 | 7 | 0 |
+| **opinion** | 2 | 9 | 2 |
+| **chatter** | 1 | 11 | 0 |
 
 **My biggest off-diagonal number, and what it means:**
 <!-- Not "the model made mistakes" — WHICH boundary it didn't learn, and which
      direction. "7 real analysis posts were called hot_take and only 3 went the
      other way" is a direction, not just an error rate. -->
 
-
+**11 real `chatter` posts were called `opinion`, and only 2 went the other
+way.** The model never learned the `opinion`/`chatter` boundary. Every
+`chatter` post that wasn't called `backed` went to `opinion`, and the
+`opinion` column takes 27 of the 36 predictions. This isn't a confusion
+between two labels so much as a model that defaults to `opinion`. Seed 7 is
+the same but worse (31 of 36 predicted `opinion`, including 10 of 11 real
+`backed` posts). The direction isn't stable either: on seed 2024, where
+predictions spread out, the biggest cell flips to 6 real `opinion` posts
+called `chatter`.
 
 ---
 
@@ -536,11 +564,13 @@ definitions. The three-seed runs below check whether that holds beyond seed
 
 | # | Criterion | Target | Verdict | How I decided |
 |---|---|---|---|---|
-| 1 |  |  |  |  |
-| 2 |  |  |  |  |
-| 3 |  |  |  |  |
-| 4 |  |  |  |  |
-| 5 |  |  |  |  |
+| 1 | Overall accuracy | ≥ 0.60 on every seed | MISSED | Best seed is 0.500; none of the three reach 0.60. |
+| 2 | F1 `backed` | ≥ 0.55 on every seed | MISSED | Seed 2024 clears it (0.636), but seed 42 (0.444) and seed 7 (0.167) don't, and the target has to hold on all three. |
+| 3 | No label F1 below 0.45 | ≥ 0.45 on every seed | MISSED | The weakest label is below 0.45 on every seed: 0.000, 0.167, 0.333. |
+| 4 | Staff agreement | ≥ 21 / 30 | PENDING | Can't be measured yet. My 30 labels are in `my_staff_labels.csv`, but the answer key `data/staff_labels.csv` only comes from the TF. |
+| 5 | Confidence gap | ≥ 0.15 on every seed | MET | Gaps are 0.167, 0.417 and 0.417, so all three clear 0.15. Seed 42 clears it by only 2 posts in 12 (5 right vs 3 right). |
+
+No criteria were revised.
 
 **Diagnoses**
 
@@ -553,7 +583,51 @@ definitions. The three-seed runs below check whether that holds beyond seed
      have that can tell a LABELLING problem from a MODEL problem, and this
      section is graded on whether you used it that way. -->
 
+**Misses 1, 2 and 3 have one shared cause: the task can't be reached from
+this much data in this much training. Too few optimizer steps, not
+inconsistent labels.**
 
+The evidence:
+
+1. **The model collapses onto one label.** On seed 42 it predicts `opinion`
+   27 of 36 times, and on seed 7 it does so 31 of 36 times. A model that has
+   learned a boundary doesn't send 10 of 11 real `backed` posts (seed 7) to
+   the same column as the jokes.
+2. **It's barely more confident than a random guess.** Average top-class
+   confidence is 0.38–0.41 on every seed, where guessing among three labels
+   gives 0.33. The classifier head has hardly moved from where it started.
+3. **The arithmetic says so too.** 168 training posts ÷ batch 16 ≈ 11 steps
+   per epoch × 3 epochs = **about 33 optimizer steps**, at a learning rate of
+   2e-5.
+4. **The same labels can be learned.** In unit 5's stretch run, seed 42 with
+   identical labels and 10 epochs scored 0.583 accuracy and `chatter` F1 0.583
+   (up from 0.000). Nothing about the labels changed. If the labels were the
+   problem, more training on them wouldn't have fixed `chatter`.
+5. **The direction of the errors flips between seeds.** `chatter` → `opinion`
+   is 11 vs 2 on seed 42, but on seed 2024 the largest cell is `opinion` →
+   `chatter` (6). A labelling inconsistency, where I applied the
+   `opinion`/`chatter` rule two different ways, would push errors the *same*
+   way on every seed.
+
+**What the agreement report can and can't add here.** It's the instrument for
+telling a labelling problem from a model problem. The staff answer key isn't
+available yet, so its rate is pending (see below). What I have is weaker: the
+unit 5 cold pass matched the pre-labels on 20 of 20, but the same labeller did
+both, so that's an upper bound. Point 5 above (errors flipping direction
+between seeds) is the strongest labelling evidence available until the staff
+file arrives. When it does, the specific check is whether my staff-set
+disagreements cluster on `reaction` vs `hot_take`, the staff pair closest to
+my `chatter` vs `opinion`.
+
+**Contributing, for criterion 2 in particular:** `backed` is the smallest
+label (53 training posts, 11 test posts). One test post moves its F1 by about
+0.08, which is why it ranges from 0.167 to 0.636. That's the "too few examples
+for a label" cause, and it's why the second improvement below targets
+`backed` data.
+
+**Instability across seeds:** accuracy moves 0.139. With 36 test posts that's
+5 posts, so even a fixed model can't be called against a target to better than
+about ±0.07 on one seed.
 
 ---
 
@@ -613,9 +687,19 @@ definitions. The three-seed runs below check whether that holds beyond seed
 
 ## The Improvement
 
-**What I changed:**
+**What I changed:** One hyperparameter. `EPOCHS` went from 3 to 10 in
+section 2 of the notebook (committed). Everything else stayed the same:
+`labels.csv`, lr 2e-5, batch 16, max length 128, the same three seeds and
+splits, and `cpu`. The section 6 rerun used `RUN_LABEL = "after"`, so the
+before file wasn't overwritten.
 
-**Which diagnosis pointed at it:**
+**Which diagnosis pointed at it:** The shared diagnosis for misses 1–3: about
+33 optimizer steps isn't enough. The evidence was the collapse onto `opinion`
+(27/36 and 31/36 predicted), top-class confidence of 0.38–0.41 against a
+0.33 random-guess level, and unit 5's single-seed 10-epoch run fixing
+`chatter` with the same labels. Ten epochs is about 110 steps. If the
+diagnosis is right, predictions should spread across all three labels on
+every seed and the per-label floor (criterion 3) should rise most.
 
 ### Run Log — After
 
