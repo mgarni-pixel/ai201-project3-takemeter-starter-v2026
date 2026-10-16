@@ -70,33 +70,83 @@ varies a lot within a single thread.
      The decision rule is worth a point on its own and it's the thing most
      people leave out. Every taxonomy has a hardest boundary. Name yours. -->
 
-### `label_one`
+### `backed`
 
-**Definition:**
-
-**Example 1:**
->
-
-**Example 2:**
->
-
-### `label_two`
-
-**Definition:**
+**Definition:** Makes a point and supports it with at least one specific
+detail you could check: a number, price, date, model or spec, a named rule or
+law, a link, or a quote from a named source.
 
 **Example 1:**
->
+> In Canada, the CEC mandates 1 grounding connection per service. All panels
+> are bonded to that connection. In other jurisdictions, multiple grounding
+> points can cause all kinds of fuckery. If you have multiple services but
+> interconnected networking, then yes, fiber is a very, very good idea.
 
 **Example 2:**
->
+> 3200 -> 3000 would be difficult to detect outside of raw benchmarks. You'd
+> need a bigger difference in speeds to really notice in the real world. When
+> people warned about not using slow ram with Ryzen, it was to make sure people
+> didn't use 2133MHz or something - speeds that would have been just fine on
+> Intel, but bottlenecked Ryzen.
+
+### `opinion`
+
+**Definition:** Takes a position (a judgment, recommendation, prediction or
+factual-sounding claim) but gives nothing checkable beyond the poster's word
+or general reasoning.
+
+**Example 1:**
+> Skies are public I don't get why so many people expect privacy in public
+> spaces.
+
+**Example 2:**
+> Gimp is perfect for what I need. People who keep complaining about it being
+> hard just refuse to learn it.
+
+### `chatter`
+
+**Definition:** Takes no position on the topic: jokes, questions, thanks,
+plain agreement, small talk, or a personal story told for its own sake.
+
+**Example 1:**
+> Nah dog you are not dumb, you are not terminally online, which is a good thing
+
+**Example 2:**
+> I've only ever used gimp, nothing else. What is bad about it that is improved
+> with adobe?
 
 ### The hardest boundary
 
-**Which two labels:**
+**Which two labels:** `backed` vs `opinion`. Two comments from the same thread
+show the problem:
+
+> You have to remember that changing color means literally doubling their SKUs
+
+> they said on wan show: no because adding colors means doubling or tripling
+> the number of skus which is risky from a business perspective
+
+They make the same claim, but only the second one says where it came from.
 
 **The decision rule I used every time:**
-<!-- e.g. "If the post names a specific checkable fact, it's `analysis`, even
-     if the tone is heated." -->
+It's `backed` only if I can point at the specific detail and say what I'd look
+up to check it, and the post's point rests on that detail. Concrete first-hand
+numbers, dates and model names count, because they're specific enough to be
+wrong ("took a bit over 2 months to ship"). None of these count:
+
+- vague experience ("in my experience", "mine broke too")
+- credentials ("I worked in e-commerce for a decade")
+- made-up or illustrative numbers ("95% correct", "if 1 USD = 0.5 CAD")
+- a detail that's only decoration or the thing being recommended (someone's
+  height, "get a Wireview Pro II")
+
+Tone doesn't matter. A furious rant with checkable version numbers is
+`backed`. A long, careful argument with nothing checkable is `opinion`.
+
+**Second rule (`opinion` vs `chatter`):** take out the joke or the story. If
+what's left is a claim someone could disagree with, it's `opinion` (or
+`backed`). If nothing is left, it's `chatter`. A rhetorical question ("How is
+it Google manages to break Gemini on their own hardware?") counts as a claim.
+A genuine question doesn't.
 
 
 
