@@ -51,62 +51,57 @@ whether you hit them:
 
 ---
 
-## 1.
+All five are measured on the held-out test split. Each one has to hold on
+**every one of the three seeds** (42, 7, 2024) in unit 6, not on average.
 
-<!-- Your criterion. It must name a number. -->
+Context for the numbers: `labels.csv` has 240 r/LinusTechTips comments split
+75 `backed`, 85 `opinion` and 80 `chatter`. A 15% test split is 36 posts, about
+11 / 13 / 12 per label, so each test post is worth about 2.8 points of
+accuracy. Always guessing the biggest label (`opinion`) scores 0.35.
 
+## 1. Overall accuracy is at least 0.60 on every seed.
 
+**Why this target:** Guessing the majority label gets 0.35, so 0.60 means the
+model is right on about 22 of 36 posts, which is far enough above guessing that
+I'd trust it as a rough first pass over a thread. I didn't go higher because
+`backed` vs `opinion` depends on whether a detail is load-bearing, which isn't
+something a surface cue can settle, and a lot of my own labels were judgment
+calls on exactly that line.
 
-**Why this target:**
+## 2. `backed` has an F1 of at least 0.55 on every seed.
 
+**Why this target:** `backed` is the label TakeMeter exists for, because it
+marks the comments worth reading. It's also my smallest label, with about 11
+test posts, so one or two misses move its F1 by around 0.1. I set it below
+criterion 1 for that reason. It also can't be met by flagging every post with a
+digit or a link, because my decision rule labels decoration numbers ("6'4", 310
+lbs", "95% correct") as not `backed`.
 
+## 3. No label has an F1 below 0.45 on any seed.
 
----
+**Why this target:** This is the floor for the weakest label, whichever one it
+is. With three roughly equal labels, a model that collapses one of them into
+another can still reach 0.60 accuracy, and this catches that. 0.45 is about 15
+points under criterion 1 because roughly 12 test posts per label makes a single
+label's F1 jumpy.
 
-## 2.
+## 4. On the 30-post staff set, my labels agree with staff on at least 21 of 30 (70%).
 
-<!-- Your criterion. -->
+**Why this target:** This is the consistency check. The staff taxonomy
+(`analysis` / `hot_take` / `reaction`) uses the same load-bearing-fact test as
+my `backed` vs `opinion` rule, so I should mostly apply it the way they did. I
+didn't set 90%, because the brief says several of the 30 were picked for being
+ambiguous. Their `reaction` label is also narrower than my `chatter`, which
+covers jokes and questions too, and I expect that mismatch to cost me some
+posts.
 
+## 5. Accuracy on the model's most-confident third is at least 0.15 higher than on its least-confident third, on every seed.
 
-
-**Why this target:**
-
-
-
----
-
-## 3.
-
-<!-- Your criterion. -->
-
-
-
-**Why this target:**
-
-
-
----
-
-## 4.
-
-<!-- Your criterion. -->
-
-
-
-**Why this target:**
-
-
-
----
-
-## 5.
-
-<!-- Your criterion. -->
-
-
-
-**Why this target:**
-
+**Why this target:** A real TakeMeter would only auto-tag comments it's sure
+about and leave the rest alone, which only works if confidence means
+something. `results.json` reports both thirds, and with 36 test posts each third
+is 12 posts, so 0.15 is about 2 more correct posts. A gap smaller than that
+could come from a single lucky split.
 
 
 ---
