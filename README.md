@@ -422,6 +422,25 @@ Tech-support questions and answers already split cleanly into `chatter`,
 
 ---
 
+**Unit 6 note on AI use:** As in unit 5, I directed Claude (in Claude Code) to
+carry out this unit's steps. It labelled the 30 staff posts, ran the baseline,
+the three-seed runs and the improvement, and drafted these sections. All
+numbers below come from the committed JSON files.
+
+**Unit 6 stretch features, declared before building:**
+
+1. **A confidence check.** Report whether the model's confident predictions are
+   right more often than its unsure ones, using the per-seed confidence numbers
+   in `results_three_seeds_*.json`.
+2. **A per-label error write-up.** For whichever label the confusion matrix
+   says is worst: which label it gets confused with, and what those posts have
+   in common.
+3. **A second measured improvement.** If the first improvement is a training
+   change, the second will be a data change, logged in the same three-seed
+   table.
+
+---
+
 ## Baseline vs. Trained
 
 <!-- Both models on the same posts. `python baseline.py --trained results.json`
@@ -437,6 +456,14 @@ Tech-support questions and answers already split cleanly into `chatter`,
 **What I predicted before I looked:**
 <!-- Milestone 1 asks you to write this BEFORE seeing the trained numbers. A
      prediction made afterwards isn't one. -->
+Written and committed before running `baseline.py`. I'd already seen the
+trained run from unit 5 (0.361 accuracy, close to guessing). I predict the
+zero-shot baseline will **match or beat it, landing around 0.40 accuracy**. It
+should do best on `backed`, since "a number, price, link or quote" is the kind
+of surface feature an entailment model can match. It should do worst on
+`chatter`, because "takes no position" is a negative definition and those are
+hard to match zero-shot. If that's right, the unit 5 fine-tune added nothing
+over reading the definitions.
 
 **What the gap actually means:**
 <!-- If the baseline matched your trained model, your fine-tuning added
