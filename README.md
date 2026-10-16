@@ -336,6 +336,81 @@ Declared here before building either one.
    the `backed` F1 directly comparable. The extras will go in
    `data/extra_backed.csv` and the output in `results_plus50_backed.json`.
 
+### Result 1: a second run with `EPOCHS = 10`
+
+Same 168 training posts, same seed-42 split, same 36 test posts (checked
+against `test_split.csv`), same device (`cpu`). The only change was 3 → 10
+epochs. Run with `python stretch_run.py --epochs 10 --out
+results_epochs10.json`. Training took 268 s.
+
+| Measure | Run 1 (3 epochs) `results.json` | Run 2 (10 epochs) `results_epochs10.json` | Change |
+|---|---|---|---|
+| Accuracy | 0.361 | 0.583 | +0.222 |
+| Macro F1 | 0.298 | 0.586 | +0.288 |
+| F1 `backed` | 0.444 | 0.696 | +0.252 |
+| F1 `opinion` | 0.450 | 0.480 | +0.030 |
+| F1 `chatter` | 0.000 | 0.583 | +0.583 |
+| Accuracy, most-confident third | 0.417 | 0.417 | 0.000 |
+| Accuracy, least-confident third | 0.250 | 0.667 | +0.417 |
+
+**What moved:** After 3 epochs (about 33 optimizer steps) the model had barely
+left its starting point. It called 27 of the 36 test posts `opinion` and never
+predicted `chatter` once, which is why `chatter` F1 was 0.00. After 10 epochs
+its predictions spread across all three labels and 21 of 36 were right. The
+biggest gain was `chatter`, the label the short run had folded into
+`opinion`. `opinion` barely moved and is now the weakest label. It's the
+middle label, sharing one boundary with each of the others, so it takes the
+errors from both sides.
+
+**What didn't:** Confidence got *less* meaningful. The model's least-confident
+third was right more often (0.667) than its most-confident third (0.417).
+Average confidence on wrong answers (0.705) was higher than on right ones
+(0.664). With 12 posts per third this is noisy, but on this seed criterion 5
+would be a clear miss.
+
+### Result 2: 52 extra `backed` examples
+
+**Where they came from:** I ran `python collect.py pool2.csv 2026-03-01
+2026-07-01` to pull 793 r/LinusTechTips comments from March–June 2026, a
+window that doesn't overlap the main pool. To find `backed` comments faster, I
+only read the 313 that contained a digit, a link, a `$`, or a word like
+"said", "WAN", "video" or "source". Claude then labelled them with the same
+rules and kept 52 clear `backed` ones, which are in `data/extra_backed.csv`.
+None of them overlap `labels.csv`, and the script checks that.
+
+That pre-filter is a bias. Every extra example has a surface cue (a number or a
+link), so the extras teach "digits mean `backed`" more strongly than the
+original 75 did.
+
+**The run:** `python stretch_run.py --extra data/extra_backed.csv --out
+results_plus50_backed.json`. The defaults were kept (3 epochs). The 52 extras
+were added to the training split only, giving 220 training posts: 105
+`backed`, 59 `opinion` and 56 `chatter`. Scoring used the same 36 test posts
+as run 1.
+
+| Measure | Run 1 (240 rows) | Run 3 (+52 `backed` in train) | Change |
+|---|---|---|---|
+| Accuracy | 0.361 | 0.306 | −0.056 |
+| Macro F1 | 0.298 | 0.156 | −0.142 |
+| F1 `backed` | 0.444 | 0.468 | +0.024 |
+| `backed` precision / recall | 0.571 / 0.364 | 0.306 / 1.000 | |
+| F1 `opinion` | 0.450 | 0.000 | −0.450 |
+| F1 `chatter` | 0.000 | 0.000 | 0.000 |
+
+**What happened to `backed`:** Its F1 went up by only 0.024, and for the wrong
+reason. The model called **all 36 test posts `backed`**, so its recall is
+1.000 and its precision drops to 0.306, which is just the share of `backed` in
+the test set. Run 1 collapsed toward `opinion`, its biggest training label.
+Run 3 collapsed toward `backed`, now its biggest training label at 48% of
+training posts.
+
+So at 3 epochs the model mostly learns the label proportions, and adding 52
+examples of one label just moves the guess. The extra data didn't fail
+because it was bad data. It failed because 3 epochs is too short to learn from
+any of it, which is what Result 1 showed. The obvious next test is the extras
+*and* 10 epochs together, but that would be two changes at once, so I've left
+it for unit 6's improvement step.
+
 Not attempted: **a fourth label**. Nothing in the 570-comment pool needed one.
 Tech-support questions and answers already split cleanly into `chatter`,
 `opinion` and `backed` under the existing rules.
