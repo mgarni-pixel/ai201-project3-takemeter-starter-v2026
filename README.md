@@ -422,75 +422,25 @@ Tech-support questions and answers already split cleanly into `chatter`,
 
 ---
 
-**Unit 6 note on AI use:** As in unit 5, I directed Claude (in Claude Code) to
-carry out this unit's steps. It labelled the 30 staff posts, ran the baseline,
-the three-seed runs and the improvement, and drafted these sections. All
-numbers below come from the committed JSON files.
-
-**Unit 6 stretch features, declared before building:**
-
-1. **A confidence check.** Report whether the model's confident predictions are
-   right more often than its unsure ones, using the per-seed confidence numbers
-   in `results_three_seeds_*.json`.
-2. **A per-label error write-up.** For whichever label the confusion matrix
-   says is worst: which label it gets confused with, and what those posts have
-   in common.
-3. **A second measured improvement.** If the first improvement is a training
-   change, the second will be a data change, logged in the same three-seed
-   table.
-
----
-
 ## Baseline vs. Trained
 
 <!-- Both models on the same posts. `python baseline.py --trained results.json`
      prints this table for you. -->
 
-Output of `python baseline.py --trained results.json`. Both columns are scored
-on the same 36 held-out posts in `test_split.csv`. The baseline is
-`facebook/bart-large-mnli`, zero-shot, prompted with the definitions in
-`label_definitions.txt`, on `cpu`. "Trained" is the unit 5 run in
-`results.json` (seed 42, 3 epochs).
-
 | Measure | Baseline | Trained | Difference |
 |---|---|---|---|
-| Overall accuracy | 0.361 | 0.361 | +0.000 |
-| Macro F1 | 0.249 | 0.298 | +0.049 |
-| F1 — `backed` | 0.512 | 0.444 | -0.067 |
-| F1 — `chatter` | 0.000 | 0.000 | +0.000 |
-| F1 — `opinion` | 0.235 | 0.450 | +0.215 |
+| Overall accuracy |  |  |  |
+| Macro F1 |  |  |  |
+| F1 — `label_one` |  |  |  |
+| F1 — `label_two` |  |  |  |
 
 **What I predicted before I looked:**
 <!-- Milestone 1 asks you to write this BEFORE seeing the trained numbers. A
      prediction made afterwards isn't one. -->
-Written and committed before running `baseline.py`. I'd already seen the
-trained run from unit 5 (0.361 accuracy, close to guessing). I predict the
-zero-shot baseline will **match or beat it, landing around 0.40 accuracy**. It
-should do best on `backed`, since "a number, price, link or quote" is the kind
-of surface feature an entailment model can match. It should do worst on
-`chatter`, because "takes no position" is a negative definition and those are
-hard to match zero-shot. If that's right, the unit 5 fine-tune added nothing
-over reading the definitions.
 
 **What the gap actually means:**
 <!-- If the baseline matched your trained model, your fine-tuning added
      nothing — and that is a real finding, not a failure. Say it plainly. -->
-**The unit 5 fine-tune added nothing over the baseline in accuracy. Both got
-13 of 36 right.** The prediction was right on two of its three calls. The
-baseline matched the trained model rather than beating it, did best on
-`backed` (0.512) and scored 0.000 on `chatter`.
-
-The two models fail in different directions. In `baseline_results.json` the
-zero-shot model calls **32 of 36 posts `backed`**. It reads almost any concrete
-noun as "a specific detail" and never predicts `chatter`. The trained model
-calls 27 of 36 posts `opinion`. Each one collapses onto a single label, and
-they just picked different ones. The only real edge the fine-tune has is
-`opinion` F1 (+0.215), and that comes from predicting `opinion` nearly every
-time.
-
-So 3 epochs of fine-tuning on 168 posts is not enough to beat reading the
-definitions. The three-seed runs below check whether that holds beyond seed
-42.
 
 
 
@@ -501,59 +451,31 @@ definitions. The three-seed runs below check whether that holds beyond seed
 <!-- Five criteria across three seeds. The notebook's section 6 prints the
      spread table; the Target and Verdict columns are yours. -->
 
-Notebook section 6, `RUN_LABEL = "before"`, the unit 5 defaults (3 epochs,
-lr 2e-5, batch 16), on **`cpu`** (torch 2.14.1+cpu). The source file is
-`results_three_seeds_before.json`. Seed 42 reproduced the unit 5 run exactly
-(0.361).
-
 | Criterion | Target | Seed 42 | Seed 7 | Seed 2024 | Verdict |
 |---|---|---|---|---|---|
-| 1. Overall accuracy | ≥ 0.60 every seed | 0.361 | 0.500 | 0.500 | MISSED |
-| 2. F1 `backed` | ≥ 0.55 every seed | 0.444 | 0.167 | 0.636 | MISSED |
-| 3. Lowest label F1 | ≥ 0.45 every seed | 0.000 (`chatter`) | 0.167 (`backed`) | 0.333 (`opinion`) | MISSED |
-| 4. Agreement with staff set | ≥ 21/30 | — | — | — | PENDING (needs `staff_labels.csv` from TF) |
-| 5. Confidence gap (most-sure third − least-sure third) | ≥ 0.15 every seed | 0.167 (0.417 − 0.250) | 0.417 (0.667 − 0.250) | 0.417 (0.750 − 0.333) | MET |
-
-The spread table from section 6, pasted as printed:
-
-| Measure | Seed 42 | Seed 7 | Seed 2024 | Spread |
-|---|---|---|---|---|
-| Overall accuracy | 0.361 | 0.500 | 0.500 | 0.139 |
-| Macro F1 | 0.298 | 0.419 | 0.503 | 0.205 |
-| F1 — `backed` | 0.444 | 0.167 | 0.636 | 0.470 |
-| F1 — `opinion` | 0.450 | 0.591 | 0.333 | 0.258 |
-| F1 — `chatter` | 0.000 | 0.500 | 0.538 | 0.538 |
-
-> Accuracy moved 0.139 across seeds — more than 10 points. Your dataset is too
-> small or too lopsided for a stable measure. That IS a diagnosis. Write it down.
+| 1.  |  |  |  |  |  |
+| 2.  |  |  |  |  |  |
+| 3.  |  |  |  |  |  |
+| 4.  |  |  |  |  |  |
+| 5.  |  |  |  |  |  |
 
 ### Confusion matrix
 
 <!-- ⚠️ TYPED AS A MARKDOWN TABLE. The notebook prints one ready to paste.
      An image of a matrix earns nothing. -->
 
-Seed 42, from section 7 (device `cpu`):
-
-| true \ predicted | backed | opinion | chatter |
+| true \ predicted |  |  |  |
 |---|---|---|---|
-| **backed** | 4 | 7 | 0 |
-| **opinion** | 2 | 9 | 2 |
-| **chatter** | 1 | 11 | 0 |
+| **** |  |  |  |
+| **** |  |  |  |
+| **** |  |  |  |
 
 **My biggest off-diagonal number, and what it means:**
 <!-- Not "the model made mistakes" — WHICH boundary it didn't learn, and which
      direction. "7 real analysis posts were called hot_take and only 3 went the
      other way" is a direction, not just an error rate. -->
 
-**11 real `chatter` posts were called `opinion`, and only 2 went the other
-way.** The model never learned the `opinion`/`chatter` boundary. Every
-`chatter` post that wasn't called `backed` went to `opinion`, and the
-`opinion` column takes 27 of the 36 predictions. This isn't a confusion
-between two labels so much as a model that defaults to `opinion`. Seed 7 is
-the same but worse (31 of 36 predicted `opinion`, including 10 of 11 real
-`backed` posts). The direction isn't stable either: on seed 2024, where
-predictions spread out, the biggest cell flips to 6 real `opinion` posts
-called `chatter`.
+
 
 ---
 
@@ -564,13 +486,11 @@ called `chatter`.
 
 | # | Criterion | Target | Verdict | How I decided |
 |---|---|---|---|---|
-| 1 | Overall accuracy | ≥ 0.60 on every seed | MISSED | Best seed is 0.500; none of the three reach 0.60. |
-| 2 | F1 `backed` | ≥ 0.55 on every seed | MISSED | Seed 2024 clears it (0.636), but seed 42 (0.444) and seed 7 (0.167) don't, and the target has to hold on all three. |
-| 3 | No label F1 below 0.45 | ≥ 0.45 on every seed | MISSED | The weakest label is below 0.45 on every seed: 0.000, 0.167, 0.333. |
-| 4 | Staff agreement | ≥ 21 / 30 | PENDING | Can't be measured yet. My 30 labels are in `my_staff_labels.csv`, but the answer key `data/staff_labels.csv` only comes from the TF. |
-| 5 | Confidence gap | ≥ 0.15 on every seed | MET | Gaps are 0.167, 0.417 and 0.417, so all three clear 0.15. Seed 42 clears it by only 2 posts in 12 (5 right vs 3 right). |
-
-No criteria were revised.
+| 1 |  |  |  |  |
+| 2 |  |  |  |  |
+| 3 |  |  |  |  |
+| 4 |  |  |  |  |
+| 5 |  |  |  |  |
 
 **Diagnoses**
 
@@ -583,51 +503,7 @@ No criteria were revised.
      have that can tell a LABELLING problem from a MODEL problem, and this
      section is graded on whether you used it that way. -->
 
-**Misses 1, 2 and 3 have one shared cause: the task can't be reached from
-this much data in this much training. Too few optimizer steps, not
-inconsistent labels.**
 
-The evidence:
-
-1. **The model collapses onto one label.** On seed 42 it predicts `opinion`
-   27 of 36 times, and on seed 7 it does so 31 of 36 times. A model that has
-   learned a boundary doesn't send 10 of 11 real `backed` posts (seed 7) to
-   the same column as the jokes.
-2. **It's barely more confident than a random guess.** Average top-class
-   confidence is 0.38–0.41 on every seed, where guessing among three labels
-   gives 0.33. The classifier head has hardly moved from where it started.
-3. **The arithmetic says so too.** 168 training posts ÷ batch 16 ≈ 11 steps
-   per epoch × 3 epochs = **about 33 optimizer steps**, at a learning rate of
-   2e-5.
-4. **The same labels can be learned.** In unit 5's stretch run, seed 42 with
-   identical labels and 10 epochs scored 0.583 accuracy and `chatter` F1 0.583
-   (up from 0.000). Nothing about the labels changed. If the labels were the
-   problem, more training on them wouldn't have fixed `chatter`.
-5. **The direction of the errors flips between seeds.** `chatter` → `opinion`
-   is 11 vs 2 on seed 42, but on seed 2024 the largest cell is `opinion` →
-   `chatter` (6). A labelling inconsistency, where I applied the
-   `opinion`/`chatter` rule two different ways, would push errors the *same*
-   way on every seed.
-
-**What the agreement report can and can't add here.** It's the instrument for
-telling a labelling problem from a model problem. The staff answer key isn't
-available yet, so its rate is pending (see below). What I have is weaker: the
-unit 5 cold pass matched the pre-labels on 20 of 20, but the same labeller did
-both, so that's an upper bound. Point 5 above (errors flipping direction
-between seeds) is the strongest labelling evidence available until the staff
-file arrives. When it does, the specific check is whether my staff-set
-disagreements cluster on `reaction` vs `hot_take`, the staff pair closest to
-my `chatter` vs `opinion`.
-
-**Contributing, for criterion 2 in particular:** `backed` is the smallest
-label (53 training posts, 11 test posts). One test post moves its F1 by about
-0.08, which is why it ranges from 0.167 to 0.636. That's the "too few examples
-for a label" cause, and it's why the second improvement below targets
-`backed` data.
-
-**Instability across seeds:** accuracy moves 0.139. With 36 test posts that's
-5 posts, so even a fixed model can't be called against a target to better than
-about ±0.07 on one seed.
 
 ---
 
@@ -639,96 +515,57 @@ about ±0.07 on one seed.
      data/staff_taxonomy.md, not your own — so every argument below is made
      from those definitions and those decision rules. -->
 
-**Agreement rate:** PENDING. `my_staff_labels.csv` (all 30 posts, labelled
-under `data/staff_taxonomy.md`) is committed. The staff answer key
-`data/staff_labels.csv` comes from the TF only after your own labels are done.
-Once it's in `data/`, `python agreement.py` gives the rate and the list of
-disagreements, and the blocks below get filled in from that output.
+**Agreement rate:** ___ / 30 = ___%
 
-**My labels:** 10 `analysis` (sp_001–sp_010), 10 `hot_take` (sp_011–sp_020),
-10 `reaction` (sp_021–sp_030).
+<!-- Nobody grades this number. A 60% who argues every disagreement from the
+     stated rules beats a 95% who wrote "staff was right" nine times. Several
+     of the 30 were chosen because they're genuinely ambiguous — you should be
+     winning some of these. -->
 
-**Calls on the posts I expect to be disputed, written before seeing the
-staff key.** Each is argued from the staff rules.
+**Disagreements**
+
+<!-- Three lines each: the post, both labels, and who you think is right and
+     why — grounded in the staff definitions you were both applying.
+
+     Then sort each into one of three piles:
+       (a) the rule covered it and I applied it loosely → a consistency problem
+       (b) the rule genuinely doesn't say               → a gap in the definitions
+       (c) the rule is ambiguous here and my reading is defensible → argue it.
+           This is a legitimate win.
+
+     Pile (a) is the one that matters most for your diagnosis: if you applied a
+     written rule two different ways on 30 posts, that is direct evidence about
+     what you did across your own 200. -->
 
 **1.**
-> *The post:* "Times are down about 3% since the shoe rules changed, so
-> obviously the shoes are the whole story and the sport has a problem." (sp_014)
+> *The post:*
 >
-> *Staff said / I said:* pending / `hot_take`
+> *Staff said / I said:*
 >
-> *My call, and why:* `hot_take`. This is almost word for word the example
-> under staff rule 1. The 3% is decoration on a conclusion ("obviously …
-> the whole story") and isn't used as the reason.
+> *My call, and why:*
 >
-> *Which pile:* if staff disagree, (c), and I'd argue it from rule 1's own
-> example.
+> *Which pile:*
 
 **2.**
-> *The post:* "Carbon plates aren't the whole story. My times dropped 2% in
-> the shoes and another 2% the following year in the same pair, when the only
-> thing that changed was going from 35 to 50 miles a week." (sp_005)
+> *The post:*
 >
-> *Staff said / I said:* pending / `analysis`
+> *Staff said / I said:*
 >
-> *My call, and why:* `analysis`. It's the mirror image of sp_014. The two 2%
-> drops and the 35→50 mileage change *are* the argument: same shoes, a second
-> drop, so something other than shoes. Under rule 1 the fact is load-bearing.
+> *My call, and why:*
 >
-> *Which pile:* (c) if disputed. One runner's numbers are still checkable
-> facts doing work.
+> *Which pile:*
 
-**3.**
-> *The post:* "Four minutes off. FOUR. I've been chasing that time for two
-> years and I'm sat on the kerb outside the finish just grinning at nothing."
-> (sp_021)
->
-> *Staff said / I said:* pending / `reaction`
->
-> *My call, and why:* `reaction`. "Four minutes" is a checkable number, but it
-> isn't supporting any argument. The post reports what just happened and how
-> it felt, which is rule 2. Rule 3 says a fact only wins when it's argued from.
->
-> *Which pile:* (b) if disputed. The rules don't say what to do with a
-> specific number in a post that argues nothing.
+**What the pattern in my disagreements tells me:**
 
-**4.**
-> *The post:* "Track sessions are wasted on anyone running slower than 8
-> minute miles. You'd get more out of just running more." (sp_018)
->
-> *Staff said / I said:* pending / `hot_take`
->
-> *My call, and why:* `hot_take`. "8 minute miles" is a threshold inside the
-> claim, not evidence for it. Nothing is offered to show why that line.
->
-> *Which pile:* (c) if disputed.
-
-**What the pattern in my disagreements tells me:** Pending the staff key.
-The prediction on record: any disagreements will cluster on posts where a
-number appears but isn't argued from (sp_014, sp_017, sp_018, sp_021,
-sp_023, sp_027). That's the same "decoration number" line my own
-`backed`/`opinion` rule draws. If staff and I split there, it's evidence my
-200 labels drew that line inconsistently too, which would feed criterion 2's
-diagnosis.
 
 
 ---
 
 ## The Improvement
 
-**What I changed:** One hyperparameter. `EPOCHS` went from 3 to 10 in
-section 2 of the notebook (committed). Everything else stayed the same:
-`labels.csv`, lr 2e-5, batch 16, max length 128, the same three seeds and
-splits, and `cpu`. The section 6 rerun used `RUN_LABEL = "after"`, so the
-before file wasn't overwritten.
+**What I changed:**
 
-**Which diagnosis pointed at it:** The shared diagnosis for misses 1–3: about
-33 optimizer steps isn't enough. The evidence was the collapse onto `opinion`
-(27/36 and 31/36 predicted), top-class confidence of 0.38–0.41 against a
-0.33 random-guess level, and unit 5's single-seed 10-epoch run fixing
-`chatter` with the same labels. Ten epochs is about 110 steps. If the
-diagnosis is right, predictions should spread across all three labels on
-every seed and the per-label floor (criterion 3) should rise most.
+**Which diagnosis pointed at it:**
 
 ### Run Log — After
 
