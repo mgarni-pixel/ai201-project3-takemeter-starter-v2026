@@ -639,48 +639,77 @@ about ±0.07 on one seed.
      data/staff_taxonomy.md, not your own — so every argument below is made
      from those definitions and those decision rules. -->
 
-**Agreement rate:** ___ / 30 = ___%
+**Agreement rate:** PENDING. `my_staff_labels.csv` (all 30 posts, labelled
+under `data/staff_taxonomy.md`) is committed. The staff answer key
+`data/staff_labels.csv` comes from the TF only after your own labels are done.
+Once it's in `data/`, `python agreement.py` gives the rate and the list of
+disagreements, and the blocks below get filled in from that output.
 
-<!-- Nobody grades this number. A 60% who argues every disagreement from the
-     stated rules beats a 95% who wrote "staff was right" nine times. Several
-     of the 30 were chosen because they're genuinely ambiguous — you should be
-     winning some of these. -->
+**My labels:** 10 `analysis` (sp_001–sp_010), 10 `hot_take` (sp_011–sp_020),
+10 `reaction` (sp_021–sp_030).
 
-**Disagreements**
-
-<!-- Three lines each: the post, both labels, and who you think is right and
-     why — grounded in the staff definitions you were both applying.
-
-     Then sort each into one of three piles:
-       (a) the rule covered it and I applied it loosely → a consistency problem
-       (b) the rule genuinely doesn't say               → a gap in the definitions
-       (c) the rule is ambiguous here and my reading is defensible → argue it.
-           This is a legitimate win.
-
-     Pile (a) is the one that matters most for your diagnosis: if you applied a
-     written rule two different ways on 30 posts, that is direct evidence about
-     what you did across your own 200. -->
+**Calls on the posts I expect to be disputed, written before seeing the
+staff key.** Each is argued from the staff rules.
 
 **1.**
-> *The post:*
+> *The post:* "Times are down about 3% since the shoe rules changed, so
+> obviously the shoes are the whole story and the sport has a problem." (sp_014)
 >
-> *Staff said / I said:*
+> *Staff said / I said:* pending / `hot_take`
 >
-> *My call, and why:*
+> *My call, and why:* `hot_take`. This is almost word for word the example
+> under staff rule 1. The 3% is decoration on a conclusion ("obviously …
+> the whole story") and isn't used as the reason.
 >
-> *Which pile:*
+> *Which pile:* if staff disagree, (c), and I'd argue it from rule 1's own
+> example.
 
 **2.**
-> *The post:*
+> *The post:* "Carbon plates aren't the whole story. My times dropped 2% in
+> the shoes and another 2% the following year in the same pair, when the only
+> thing that changed was going from 35 to 50 miles a week." (sp_005)
 >
-> *Staff said / I said:*
+> *Staff said / I said:* pending / `analysis`
 >
-> *My call, and why:*
+> *My call, and why:* `analysis`. It's the mirror image of sp_014. The two 2%
+> drops and the 35→50 mileage change *are* the argument: same shoes, a second
+> drop, so something other than shoes. Under rule 1 the fact is load-bearing.
 >
-> *Which pile:*
+> *Which pile:* (c) if disputed. One runner's numbers are still checkable
+> facts doing work.
 
-**What the pattern in my disagreements tells me:**
+**3.**
+> *The post:* "Four minutes off. FOUR. I've been chasing that time for two
+> years and I'm sat on the kerb outside the finish just grinning at nothing."
+> (sp_021)
+>
+> *Staff said / I said:* pending / `reaction`
+>
+> *My call, and why:* `reaction`. "Four minutes" is a checkable number, but it
+> isn't supporting any argument. The post reports what just happened and how
+> it felt, which is rule 2. Rule 3 says a fact only wins when it's argued from.
+>
+> *Which pile:* (b) if disputed. The rules don't say what to do with a
+> specific number in a post that argues nothing.
 
+**4.**
+> *The post:* "Track sessions are wasted on anyone running slower than 8
+> minute miles. You'd get more out of just running more." (sp_018)
+>
+> *Staff said / I said:* pending / `hot_take`
+>
+> *My call, and why:* `hot_take`. "8 minute miles" is a threshold inside the
+> claim, not evidence for it. Nothing is offered to show why that line.
+>
+> *Which pile:* (c) if disputed.
+
+**What the pattern in my disagreements tells me:** Pending the staff key.
+The prediction on record: any disagreements will cluster on posts where a
+number appears but isn't argued from (sp_014, sp_017, sp_018, sp_021,
+sp_023, sp_027). That's the same "decoration number" line my own
+`backed`/`opinion` rule draws. If staff and I split there, it's evidence my
+200 labels drew that line inconsistently too, which would feed criterion 2's
+diagnosis.
 
 
 ---
